@@ -22,7 +22,26 @@ async function handleDropAsync(e) {
   /* do something with the workbook here */
    jsonArray = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
   jsonArray.splice(0,10);
-  docWrite=`` ;
+  docWrite=`<script>
+  function saveFile(filename) {
+    document.getElementById('saveButton').remove();
+    filename ="Testpage_${/^(.+?)_en_|^(.+?)_fr_/.exec(jsonArray[0].__EMPTY_7)[0].slice(0,-1)}.html";
+    text = document.querySelector("html").innerHTML;
+
+ var element = document.createElement('a');
+ element.setAttribute('href', 'data:text/plain;charset=utf-8,' + 
+ encodeURIComponent(text));
+ element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}<`+`/script>` ;
+docWrite+= `<h1> ${/^(.+?)_en_|^(.+?)_fr_/.exec(jsonArray[0].__EMPTY_7)[0].slice(0,-1)}</h1>`; //getting campaign name from first obj in array
+docWrite += "<input type='button' id ='saveButton' onclick=saveFile() value='Save Testpage' /> </br>";
   jsonArray.forEach(function (el){
     const dimensionRegex = /(\d{1,4})x(\d{1,4})/;
     let dimension= dimensionRegex.exec(el.__EMPTY_7); //this returns an array of ["300x600","300","600"]
