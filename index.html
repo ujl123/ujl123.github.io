@@ -1,0 +1,35 @@
+<script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
+<div
+  id="drop_dom_element"
+  style = "height:100%">
+  <p>Drag one or more files to this <i>drop zone</i>.</p>
+</div>
+<script>
+let jsonString;
+/* suppress default behavior for drag and drop events */
+function suppress(e) { e.stopPropagation(); e.preventDefault(); }
+
+/* handle data from drop event */
+async function handleDropAsync(e) {
+  suppress(e);
+  /* get first file */
+  const f = e.dataTransfer.files[0];
+  /* get raw data */
+  const data = await f.arrayBuffer();
+  /* data is an ArrayBuffer */
+  const wb = XLSX.read(data);
+  /* do something with the workbook here */
+   jsonArray = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+  jsonArray.splice(0,10);
+  docWrite="";
+  jsonArray.forEach(function (el){
+    docWrite+= `${el.__EMPTY_7} ${el.__EMPTY_3} </br></br></br> ${el.__EMPTY_15} </br></br></br>`;
+  })
+  console.log(docWrite);
+document.write(docWrite);
+}
+
+drop_dom_element.addEventListener("drop", handleDropAsync, false);
+drop_dom_element.addEventListener("dragover", suppress, false);
+drop_dom_element.addEventListener("dragenter", suppress, false);
+</script>
