@@ -1,3 +1,4 @@
+<!-- use version 0.19.1 -->
 <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
 <div
   id="drop_dom_element"
@@ -21,9 +22,13 @@ async function handleDropAsync(e) {
   /* do something with the workbook here */
    jsonArray = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
   jsonArray.splice(0,10);
-  docWrite="";
+  docWrite=` <script type="text/javascript">
+  function resizeIframe(iframe) {
+    iframe.height = 100+iframe.contentWindow.document.body.scrollHeight +"px";
+  }
+<`+`/script>` ;
   jsonArray.forEach(function (el){
-    docWrite+= `${el.__EMPTY_7} ${el.__EMPTY_3} </br></br></br> ${el.__EMPTY_15} </br></br></br>`;
+    docWrite+= `${el.__EMPTY_7} ${el.__EMPTY_3} </br></br></br> <iframe class = 'iframeCreatives' srcdoc="${el.__EMPTY_15}" style='width:1000px ' onload="resizeIframe(this)"></iframe> </br></br>`;
   })
   console.log(docWrite);
 document.write(docWrite);
